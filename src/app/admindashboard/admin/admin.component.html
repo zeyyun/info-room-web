@@ -1,0 +1,290 @@
+<!-- ===== Header ===== -->
+<div class="header-shell sticky top-0 bg-white/80 backdrop-blur border-b border-slate-200">
+  <div class="header-bar mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+
+  
+    <div class="admin-account" aria-label="Account">
+      <button
+        class="admin-avatar-btn"
+        (click)="toggleAccountMenu()"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="accountOpen"
+        title="Account"
+        type="button"
+      >
+        <svg class="admin-avatar-img" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="11" fill="black"></circle>
+          <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" fill="white"/>
+        </svg>
+        <svg class="admin-chev" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="admin-account-menu" *ngIf="accountOpen" role="menu">
+        <div class="admin-menu-header">
+          <div class="admin-mh-name">{{ currentUser?.name || 'Admin' }}</div>
+          <div class="admin-mh-email">{{ currentUser?.email || 'admin@example.com' }}</div>
+        </div>
+
+        <button class="admin-menu-item" role="menuitem" type="button" (click)="openChangePassword()">
+          <svg viewBox="0 0 24 24" class="admin-mi-ic" aria-hidden="true">
+            <path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 016 0v3H9z"/>
+          </svg>
+          Change Password
+        </button>
+
+        <button class="admin-menu-item admin-danger" role="menuitem" type="button" (click)="logout()">
+          <svg viewBox="0 0 24 24" class="admin-mi-ic" aria-hidden="true">
+            <path d="M16 13v-2H9V8l-5 4 5 4v-3h7z"/>
+            <path d="M20 3h-7a2 2 0 00-2 2v3h2V5h7v14h-7v-3h-2v3a2 2 0 002 2h7a2 2 0 002-2V5a2 2 0 00-2-2z"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Top stat cards ===== -->
+<div class="stats">
+  <div class="stat-card users">
+    <div class="stat-title">Users</div>
+    <div class="stat-value">{{ usersCount }}</div>
+  </div>
+
+  <div class="stat-card status">
+    <div class="stat-title">Status</div>
+    <div class="stat-value">{{ statusCount }}</div>
+    <div class="stat-sub">
+      <span class="sub active"><span class="dot"></span> Active {{ activeCount }}</span>
+      <span class="sub pending"><span class="dot"></span> Pending {{ pendingCount }}</span>
+      <span class="sub suspended"><span class="dot"></span> Suspended {{ suspendedCount }}</span>
+    </div>
+  </div>
+
+  <div class="stat-card posts">
+    <div class="stat-title">Posts</div>
+    <div class="stat-value">{{ postsCount }}</div>
+  </div>
+</div>
+
+<!-- ===== Pending Users ===== -->
+<app-pending-users-table
+  [users]="pendingUsers"
+  (approve)="onApprove($event)"
+  (suspend)="onSuspend($event)"
+  (remove)="onRemove($event)"
+></app-pending-users-table>
+
+<!-- ===== Suspended Users (toggle like Pending) ===== -->
+<div class="section section--pill">
+  <button type="button"
+          class="pill-title pill-title--suspended"
+          [class.open]="showSuspended"
+          (click)="toggleSuspended()">
+    <span class="dot"></span> Suspended Users
+  </button>
+
+  <div class="table-wrap" *ngIf="showSuspended">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of suspendedUsers; let i = index; trackBy: trackById">
+          <td>{{ i + 1 }}</td>
+          <td>{{ u.name || (u.email || '').split('@')[0] }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>
+            <span class="badge badge-suspended">SUSPENDED</span>
+          </td>
+          <td class="actions">
+            <button class="chip chip-approve" (click)="onActivate(u.id)">Approve</button>
+            <button class="chip chip-danger" (click)="onDeleteSuspended(u.id)">Delete</button>
+          </td>
+        </tr>
+        <tr *ngIf="suspendedUsers.length === 0">
+          <td colspan="6" style="color: gray;">No suspended users.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== All Users (same color style as Suspended) ===== -->
+<div class="section section--pill">
+  <button type="button"
+          class="pill-title like-suspended"
+          [class.open]="showAll"
+          (click)="toggleAll()">
+    <span class="dot"></span> All Users
+  </button>
+
+  <div class="table-wrap" *ngIf="showAll">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th class="text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of approvedUsers; let i = index; trackBy: trackById">
+          <td>{{ i + 1 }}</td>
+          <td>{{ u.name || (u.email || '').split('@')[0] }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>
+            <span class="badge" [ngClass]="u.status === 'ACTIVE' ? 'badge-success' : 'badge-warning'">
+              {{ u.status }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="chip chip-danger" (click)="deleteUser(u)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer" *ngIf="showAll">
+    <button class="btn btn-primary" (click)="openAdd()">Add User</button>
+  </div>
+</div>
+
+<!-- ===== Add User dialog ===== -->
+<dialog id="addUserDialog" class="dialog">
+  <form class="dialog-card register-like" (submit)="$event.preventDefault()">
+    <div class="dialog-header">
+      <h3>Create Account</h3>
+      <p>Add a new user just like the registration form.</p>
+
+      <div *ngIf="addError" class="alert-err">
+        {{ addError }}
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Full Name</label>
+        <input class="field" [(ngModel)]="newUser.name" name="name" placeholder="e.g., Zeiyana Said"/>
+      </div>
+      <div>
+        <label>Email</label>
+        <input class="field" [(ngModel)]="newUser.email" name="email" type="email" placeholder="you@example.com"/>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Password</label>
+        <input class="field" [(ngModel)]="newUser.password" name="password" type="password" placeholder="••••••••"/>
+        <small *ngIf="passTooShort" class="error-hint">At least 6 characters.</small>
+      </div>
+      <div>
+        <label>Confirm Password</label>
+        <input class="field" [(ngModel)]="newUser.confirmPassword" name="confirmPassword" type="password" placeholder="••••••••"/>
+        <small *ngIf="passMismatch" class="error-hint">Passwords do not match.</small>
+      </div>
+    </div>
+
+    <div>
+      <label>Role</label>
+      <select class="field" [(ngModel)]="newUser.role" name="role">
+        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+
+    <div class="grid-2" *ngIf="needCampus() || needCourse()">
+      <div *ngIf="needCampus()">
+        <label>Campus</label>
+        <select class="field" [(ngModel)]="newUser.campus" name="campus">
+          <option value="" disabled selected>Select campus</option>
+          <option *ngFor="let c of campuses" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+      <div *ngIf="needCourse()">
+        <label>Course</label>
+        <select class="field" [(ngModel)]="newUser.course" name="course">
+          <option value="" disabled selected>Select course</option>
+          <option *ngFor="let c of courses" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="needRegistration()">
+      <label>Registration</label>
+      <input class="field" [(ngModel)]="newUser.registration" name="registration" placeholder="e.g., CR-001"/>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn" (click)="closeAdd()">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="saveAdd()">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- =============================== -->
+<!--      CHANGE PASSWORD MODAL      -->
+<!-- =============================== -->
+<div class="modal-backdrop" *ngIf="pwdOpen" (click)="closePwd()"></div>
+
+<div class="modal" *ngIf="pwdOpen" (click)="$event.stopPropagation()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Change Password</h3>
+      <button class="close" (click)="closePwd()" [disabled]="busy" aria-label="Close">×</button>
+    </div>
+
+    <form class="modal-body" [formGroup]="pwdForm" (ngSubmit)="submitPwd()">
+      <label>Current password</label>
+      <div class="pwd-row">
+        <input [type]="showCur ? 'text' : 'password'" formControlName="currentPassword" [disabled]="busy" />
+        <button type="button" class="eye" (click)="showCur = !showCur" [attr.aria-label]="showCur ? 'Hide' : 'Show'">👁</button>
+      </div>
+      <div class="hint err" *ngIf="pwdForm.get('currentPassword')?.touched && pwdForm.get('currentPassword')?.invalid">
+        Required
+      </div>
+
+      <label>New password</label>
+      <div class="pwd-row">
+        <input [type]="showNew ? 'text' : 'password'" formControlName="newPassword" [disabled]="busy" />
+        <button type="button" class="eye" (click)="showNew = !showNew" [attr.aria-label]="showNew ? 'Hide' : 'Show'">👁</button>
+      </div>
+      <div class="hint err" *ngIf="pwdForm.get('newPassword')?.touched && pwdForm.get('newPassword')?.hasError('minlength')">
+        Minimum 8 characters
+      </div>
+
+      <label>Confirm new password</label>
+      <div class="pwd-row">
+        <input [type]="showCf ? 'text' : 'password'" formControlName="confirm" [disabled]="busy" />
+        <button type="button" class="eye" (click)="showCf = !showCf" [attr.aria-label]="showCf ? 'Hide' : 'Show'">👁</button>
+      </div>
+      <div class="hint err" *ngIf="pwdForm.get('confirm')?.touched && pwdForm.get('confirm')?.invalid">
+        Required
+      </div>
+
+      <div class="state ok" *ngIf="ok">{{ ok }}</div>
+      <div class="state err" *ngIf="err">{{ err }}</div>
+
+      <div class="actions">
+        <button type="button" class="btn" (click)="closePwd()" [disabled]="busy">Cancel</button>
+        <button type="submit" class="btn primary" [disabled]="busy || pwdForm.invalid">Change</button>
+      </div>
+    </form>
+  </div>
+</div>

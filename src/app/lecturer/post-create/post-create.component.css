@@ -1,0 +1,75 @@
+/* kadi yako kama ilivyokuwa */
+.card{ border:1px solid #eee; border-radius:12px; padding:16px; max-width:900px; background:#fff; }
+h2{ margin-top:0; }
+
+/* rows za form */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  align-items:end;                 /* labels + inputs zilingane chini */
+}
+/* ruhusu vitu ndani ya grid kujibana bila kuvuka */
+.grid > *{ min-width:0; }
+
+/* mstari unaobeba Link & File (file iko kulia) */
+.grid.file-row{
+  grid-template-columns:minmax(0,1fr) max-content;   /* Link inapanuka, File kubaki auto */
+  gap:16px;
+  align-items:end;
+}
+
+/* labels */
+label{ display:block; font-size:12px; opacity:.8; margin-bottom:6px; }
+
+/* inputs za kawaida */
+textarea, input[type="url"], select{
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  background:#fff;
+}
+textarea{ resize:vertical; display:block; }
+/* multi-select uonekane vizuri (urefu) */
+select[multiple]{ min-height:140px; }
+
+/* urefu wa link ufanane na kisanduku cha file */
+input[type="url"]{ height:40px; }
+
+/* ====== Kisanduku cha FILE (hiki ndicho kinatoa muonekano wa picha #2) ====== */
+.file-col{ min-width:0; }
+.file-box{
+  display:flex;
+  align-items:center;              /* center kwa urefu */
+  height:40px;                     /* urefu sawa na input ya link */
+  padding:0 12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  background:#fff;
+  box-sizing:border-box;
+  min-width:260px;                 /* jisikie huru kubadili */
+}
+/* file input yenyewe – tunatoa border yake, ibaki ndani ya box */
+.file-box input[type="file"]{
+  border:0;
+  padding:0;
+  background:transparent;
+  height:auto;                     /* fuata urefu wa .file-box */
+}
+
+/* sehemu nyingine zisibadilike */
+.seg{ display:flex; gap:18px; }
+.actions{ margin-top:14px; display:flex; align-items:center; gap:12px; }
+button{ background:#111; color:#fff; border:none; border-radius:10px; padding:10px 16px; cursor:pointer; }
+.ok{ color:#0b8a28; }
+.err{ color:#c02626; }
+
+/* responsive: weka file chini ya link kwenye simu */
+@media (max-width:900px){
+  .grid{ grid-template-columns:1fr; }
+  .grid.file-row{ grid-template-columns:1fr; }
+  .file-box{ width:100%; min-width:0; }
+}

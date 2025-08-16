@@ -1,0 +1,42 @@
+<div class="section">
+  <div class="section-header">
+    <button class="pill" [class.active]="isOpen" (click)="toggle()">
+      Pending Users
+      <span class="chev">{{ isOpen ? '▾' : '▸' }}</span>
+    </button>
+  </div>
+
+  <div class="collapse" [class.open]="isOpen">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+            <td><span class="badge badge-warning">{{ u.status }}</span></td>
+            <td class="actions">
+              <button class="chip chip-success" (click)="onApprove(u.id)">Approve</button>
+              <button class="chip chip-warning" (click)="onSuspend(u.id)">Suspend</button>
+              <button class="chip chip-danger"  (click)="onDelete(u.id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="!users?.length">
+            <td colspan="6" class="empty">No pending users.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

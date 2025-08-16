@@ -1,0 +1,59 @@
+<div class="section">
+  <h2>Create Update</h2>
+
+  <!-- Audience -->
+  <div class="row audience-row">
+    <label class="radio">
+      <input type="radio" [value]="'ALL'" formControlName="audience" />
+      <span>All Students</span>
+    </label>
+    <label class="radio">
+      <input type="radio" [value]="'CLASSES'" formControlName="audience" />
+      <span>Specific Classes</span>
+    </label>
+  </div>
+
+  <!-- Classes (multiple) -->
+  <div class="row">
+    <label>Class(es)</label>
+    <select formControlName="classes" multiple [disabled]="!isClasses" style="min-height:96px;">
+      <option *ngFor="let c of classesList" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <!-- Campus -->
+  <div class="row">
+    <label>Campus</label>
+    <select formControlName="campus">
+      <option value="">-- select campus --</option>
+      <option *ngFor="let c of campuses" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <!-- Text -->
+  <div class="row">
+    <label>Text</label>
+    <textarea formControlName="text" rows="6"></textarea>
+  </div>
+
+  <!-- Link + Image (one line, no overlap) -->
+  <div class="row link-image">
+    <div class="col">
+      <label>Link (optional)</label>
+      <input formControlName="link" type="url" placeholder="https://example.com" />
+    </div>
+
+    <div class="col file">
+      <label>Image (optional)</label>
+      <input type="file" accept="image/*" (change)="onFileChange($event)" />
+    </div>
+  </div>
+
+  <!-- alerts -->
+  <div *ngIf="error" class="alert error">{{ error }}</div>
+  <div *ngIf="success" class="alert success">{{ success }}</div>
+
+  <button class="btn btn-primary" (click)="submit()" [disabled]="loading">
+    {{ loading ? 'Posting...' : 'Post' }}
+  </button>
+</div>

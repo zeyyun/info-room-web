@@ -1,0 +1,51 @@
+<form class="card" [formGroup]="form" (ngSubmit)="submit()">
+  <h2>Create Update</h2>
+
+  <div class="grid">
+    <div>
+      <label>Audience</label>
+      <div class="seg">
+        <label>
+          <input type="radio" value="ALL_STUDENTS" formControlName="audienceType" [disabled]="busy" />
+          All Students
+        </label>
+        <label>
+          <input type="radio" value="CLASSES" formControlName="audienceType" [disabled]="busy" />
+          Specific Classes
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="audienceType === 'CLASSES'">
+      <label>Class</label>
+      <select formControlName="classId" [disabled]="busy">
+        <option [ngValue]="null">-- select class --</option>
+        <option *ngFor="let cls of classes" [ngValue]="cls.id">{{ cls.code }}</option>
+      </select>
+    </div>
+  </div>
+
+  <label>Text</label>
+  <textarea formControlName="text" rows="5" placeholder="Write your update..." [disabled]="busy"></textarea>
+
+  <div class="grid file-row">
+    <div>
+      <label>Link (optional)</label>
+      <input formControlName="link" type="url" placeholder="https://example.com" />
+    </div>
+
+    <div class="file-col">
+      <label>Image (optional)</label>
+      <div class="file-box">
+        <input #fileInput type="file" accept="image/*" (change)="onFileChange($event)" />
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="submit" [disabled]="busy || form.invalid">Post</button>
+    <span class="state" *ngIf="busy">Posting...</span>
+    <span class="ok" *ngIf="success">{{ success }}</span>
+    <span class="err" *ngIf="error">{{ error }}</span>
+  </div>
+</form>

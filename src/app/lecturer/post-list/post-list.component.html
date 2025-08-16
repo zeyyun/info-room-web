@@ -1,0 +1,60 @@
+<div class="list-top">
+  <input type="search" placeholder="Search my posts..." [(ngModel)]="q" (keyup.enter)="search()" />
+  <button (click)="search()">Search</button>
+</div>
+
+<div *ngIf="loading" class="muted">Loading...</div>
+<div *ngIf="error" class="err">{{ error }}</div>
+
+<div *ngFor="let p of items" class="card post-card">
+  <div class="post-head">
+    <div class="chips">
+      <span class="chip chip-all" *ngIf="audienceLabel(p) === 'All Students'">All Students</span>
+      <span class="chip chip-classes" *ngIf="audienceLabel(p) === 'Classes'">
+        Classes <ng-container *ngIf="p.classId != null"> · {{ classCode(p.classId) }}</ng-container>
+      </span>
+    </div>
+    <div class="time">{{ p.createdAt | date:'MMM d, y, h:mm:ss a' }}</div>
+  </div>
+
+  <!-- view mode -->
+  <ng-container *ngIf="!p._editing; else editTpl">
+    <div class="post-body">
+      <div class="text">{{ p.text }}</div>
+      <a *ngIf="p.link" class="link" [href]="p.link!" target="_blank" rel="noopener">{{ p.link }}</a>
+      <img *ngIf="p.imagePath" class="img" [src]="p.imagePath" alt="attachment" />
+    </div>
+    <div class="post-actions">
+      <button (click)="edit(p)">Edit</button>
+      <button class="danger" (click)="del(p)">Delete</button>
+    </div>
+  </ng-container>
+
+  <!-- edit mode -->
+  <ng-template #editTpl>
+    <div class="edit-form">
+      <div class="row">
+        <label>Audience</label>
+        <select [(ngModel)]="p._aud">
+          <option value="ALL_STUDENTS">All Students</option>
+          <option value="CLASSES">Specific Classes</option>
+        </select>
+
+        <select *ngIf="p._aud === 'CLASSES'" [(ngModel)]="p._classId">
+          <option [ngValue]="null">-- select class --</option>
+          <option *ngFor="let c of classes" [ngValue]="c.id">{{ c.code }}</option>
+        </select>
+      </div>
+
+      <textarea [(ngModel)]="p._text" rows="3" placeholder="Write something... (optional)"></textarea>
+      <input [(ngModel)]="p._link" type="url" placeholder="https://example.com (optional)" />
+
+      <div class="post-actions">
+        <button (click)="repost(p)">Repost</button>
+        <button class="danger" (click)="cancel(p)">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<div *ngIf="!loading && !items.length" class="muted">No posts yet.</div>

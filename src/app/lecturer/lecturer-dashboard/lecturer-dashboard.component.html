@@ -1,0 +1,120 @@
+<header class="topbar topbar--z">
+  <div class="brand">
+    INFO ROOM • <span class="role">Lecturer</span>
+  </div>
+
+  <div class="spacer"></div>
+
+  <!-- === Account (avatar + dropdown) === -->
+  <div class="account" aria-label="Account">
+    <button
+      type="button"
+      class="avatar-btn"
+      (click)="toggleAccountMenu()"
+      aria-haspopup="menu"
+      [attr.aria-expanded]="accountOpen"
+      title="Account"
+    >
+      <div class="avatar">
+        {{ (userName || 'U') | slice:0:1 | uppercase }}
+      </div>
+      <svg class="chev" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- dropdown -->
+    <div class="account-menu" *ngIf="accountOpen" role="menu" (click)="$event.stopPropagation()">
+      <div class="menu-header">
+        <div class="mh-name">{{ userName || 'User' }}</div>
+        <div class="mh-email">{{ userEmail }}</div>
+      </div>
+
+      <!-- Change Password -->
+      <button class="menu-item" role="menuitem" type="button" (click)="openChangePassword()">
+        <svg viewBox="0 0 24 24" class="mi-ic" aria-hidden="true">
+          <path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 016 0v3H9z"/>
+        </svg>
+        Change Password
+      </button>
+
+      <button class="menu-item danger" role="menuitem" type="button" (click)="logout()">
+        <svg viewBox="0 0 24 24" class="mi-ic" aria-hidden="true">
+          <path d="M16 13v-2H9V8l-5 4 5 4v-3h7z"/>
+          <path d="M20 3h-7a2 2 0 00-2 2v3h2V5h7v14h-7v-3h-2v3a2 2 0 002 2h7a2 2 0 002-2V5a2 2 0 00-2-2z"/>
+        </svg>
+        Logout
+      </button>
+    </div>
+  </div>
+  <!-- === /Account === -->
+</header>
+
+<div class="layout">
+  <aside class="sidebar" role="navigation" aria-label="Lecturer actions">
+    <button
+      type="button"
+      [class.active]="tab === 'create'"
+      [attr.aria-current]="tab === 'create' ? 'page' : null"
+      (click)="setTab('create')"
+    >
+      Create Post
+    </button>
+
+    <button
+      type="button"
+      [class.active]="tab === 'list'"
+      [attr.aria-current]="tab === 'list' ? 'page' : null"
+      (click)="setTab('list')"
+    >
+      My Posts
+    </button>
+  </aside>
+
+  <main class="content">
+    <app-post-create *ngIf="tab === 'create'" (posted)="setTab('list')"></app-post-create>
+    <app-post-list *ngIf="tab === 'list'"></app-post-list>
+  </main>
+</div>
+
+<!-- ===== Modal: Change Password ===== -->
+<div class="modal-backdrop" *ngIf="pwdOpen" (click)="closePwd()"></div>
+
+<div class="modal" *ngIf="pwdOpen" (click)="$event.stopPropagation()">
+  <div class="modal-header">
+    <h3>Change Password</h3>
+    <button class="close" (click)="closePwd()" [disabled]="busy">×</button>
+  </div>
+
+  <form class="modal-body" [formGroup]="pwdForm" (ngSubmit)="submitPwd()">
+ <label>Current password</label>
+<div class="field">
+  <input [type]="showCur ? 'text' : 'password'" formControlName="currentPassword" [disabled]="busy" />
+  <button type="button" class="eye" (click)="showCur = !showCur" [disabled]="busy">👁️</button>
+</div>
+
+<label>New password</label>
+<div class="field">
+  <input [type]="showNew ? 'text' : 'password'" formControlName="newPassword" [disabled]="busy" />
+  <button type="button" class="eye" (click)="showNew = !showNew" [disabled]="busy">👁️</button>
+</div>
+
+<label>Confirm new password</label>
+<div class="field">
+  <input [type]="showCf ? 'text' : 'password'" formControlName="confirm" [disabled]="busy" />
+  <button type="button" class="eye" (click)="showCf = !showCf" [disabled]="busy">👁️</button>
+</div>
+
+  <div class="hint err" *ngIf="pwdForm.get('confirm')?.touched && pwdForm.get('confirm')?.invalid">
+    Required
+  </div>
+
+  <div class="state ok" *ngIf="ok">{{ ok }}</div>
+  <div class="state err" *ngIf="err">{{ err }}</div>
+
+  <div class="actions">
+    <button type="button" class="btn" (click)="closePwd()" [disabled]="busy">Cancel</button>
+    <button type="submit" class="btn primary" [disabled]="busy || pwdForm.invalid">Change</button>
+  </div>
+</form>
+</div>

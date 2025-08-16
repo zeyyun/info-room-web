@@ -1,0 +1,54 @@
+:host { display:block; height:100%; background:whitesmoke; }
+
+/* topbar */
+.topbar{ display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid lightgray; background:white; position:sticky; top:0; z-index:200; }
+.brand{ font-weight:700; letter-spacing:.5px; }
+.spacer{ flex:1; }
+
+/* layout */
+.layout{ display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 56px); }
+.sidebar{ border-right:1px solid lightgray; padding:16px; display:flex; flex-direction:column; gap:8px; background:white; }
+.sidebar button{ text-align:left; padding:10px 12px; border-radius:8px; border:1px solid lightgray; background:whitesmoke; cursor:pointer; }
+.sidebar button.active{ background:black; color:white; border-color:black; }
+.content{ padding:24px; }
+
+/* account (avatar + dropdown) */
+.account{ position:relative; }
+.avatar-btn{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:9999px; background:white; color:black; border:1px solid lightgray; box-shadow:0 4px 10px rgba(0,0,0,.06); cursor:pointer; transition:box-shadow .15s, transform .12s, background .15s; }
+.avatar-btn:hover{ background:whitesmoke; box-shadow:0 8px 18px rgba(0,0,0,.10); }
+.avatar-btn:active{ transform:scale(.98); }
+.avatar-btn:focus-visible{ outline:2px solid mediumslateblue; outline-offset:2px; }
+.avatar{ width:32px; height:32px; border-radius:50%; display:grid; place-items:center; border:1px solid lightgray; background:white; font-weight:700; }
+.chev{ width:16px; height:16px; opacity:.8; }
+
+.account-menu{ position:absolute; top:100%; right:0; margin-top:8px; width:240px; background:white; border:1px solid lightgray; border-radius:12px; box-shadow:0 20px 40px rgba(0,0,0,.12); overflow:hidden; z-index:300; }
+.menu-header{ padding:12px 14px; background:whitesmoke; border-bottom:1px solid lightgray; }
+.mh-name{ font-weight:700; font-size:14px; color:black; }
+.mh-email{ font-size:12px; color:gray; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.menu-item{ width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px; background:white; border:0; cursor:pointer; font-weight:600; color:black; transition:background .12s; }
+.menu-item:hover{ background:whitesmoke; }
+.menu-item .mi-ic{ width:18px; height:18px; fill:currentColor; }
+.menu-item.danger{ color:firebrick; }
+.menu-item.danger:hover{ background:mistyrose; }
+
+/* modal */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 40; }
+.modal { position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 520px; max-width: 95vw; background:white; border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.2); z-index: 50; }
+.modal-header { display:flex; align-items:center; justify-content: space-between; padding: 14px 16px; border-bottom:1px solid lightgray; }
+.modal-body { display:flex; flex-direction: column; gap: 10px; padding: 16px; }
+.modal .close { background: transparent; border: 0; font-size: 22px; cursor: pointer; }
+
+/* password rows: keep inside modal */
+.field { display:flex; align-items:center; gap:8px; }
+.field input[type="password"],
+.field input[type="text"] { flex:1 1 auto; min-width:0; padding:10px; border:1px solid lightgray; border-radius:10px; box-sizing:border-box; }
+.eye { flex:0 0 38px; height:38px; width:38px; display:grid; place-items:center; border:1px solid lightgray; border-radius:10px; background:white; cursor:pointer; }
+.eye:disabled { opacity:.5; cursor:default; }
+
+.hint.err { color:firebrick; font-size: 12px; }
+.state.ok { color:seagreen; }
+.state.err { color:firebrick; }
+.actions { display:flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+.btn { padding: 8px 14px; border-radius: 10px; border:1px solid lightgray; background:white; cursor:pointer; }
+.btn.primary { background:black; color:white; border-color:black; }
+.btn[disabled] { opacity:.6; cursor:not-allowed; }

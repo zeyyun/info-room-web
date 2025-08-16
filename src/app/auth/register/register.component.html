@@ -1,0 +1,147 @@
+<div class="wrap">
+  <div class="card">
+    <div class="brand">
+      <div class="logo">IR</div>
+      <div class="titles">
+        <h1>Create Account</h1>
+        <p>Join INFO ROOM</p>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="alert error">{{ error }}</div>
+    <div *ngIf="success" class="alert success">{{ success }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate autocomplete="off">
+      <div class="grid">
+        <div>
+          <label for="firstName">First name</label>
+          <input id="firstName" placeholder="Zeiyana" formControlName="firstName"
+                 [class.invalid]="f.firstName.touched && f.firstName.invalid" />
+          <div class="hint" *ngIf="f.firstName.touched && f.firstName.errors">Required</div>
+        </div>
+
+        <div>
+          <label for="lastName">Last name</label>
+          <input id="lastName" placeholder="Soud" formControlName="lastName"
+                 [class.invalid]="f.lastName.touched && f.lastName.invalid" />
+          <div class="hint" *ngIf="f.lastName.touched && f.lastName.errors">Required</div>
+        </div>
+
+        <div class="full">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" formControlName="email"
+                 [class.invalid]="f.email.touched && f.email.invalid" />
+          <div class="hint" *ngIf="f.email.touched && f.email.errors">
+            <span *ngIf="f.email.errors['required']">Required.</span>
+            <span *ngIf="f.email.errors['email']">Enter a valid email.</span>
+          </div>
+        </div>
+
+        <!-- Password -->
+<div class="full">
+  <label for="password">Password</label>
+  <div class="input-with-button">
+    <input id="password" [type]="showPassword ? 'text' : 'password'"
+           placeholder="••••••••" formControlName="password"
+           [class.invalid]="f.password.touched && f.password.invalid" />
+    <button type="button" class="eye" (click)="togglePass('pass')" aria-label="Toggle password">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path *ngIf="!showPassword"
+              d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+        <path *ngIf="showPassword"
+              d="M3 3l18 18-1.41 1.41L15.73 19A10.94 10.94 0 0 1 12 20C7 20 2.73 16.89 1 13c.54-1.22 1.34-2.33 2.34-3.28L1.59 7.97 3 6.56l18 18z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="hint" *ngIf="f.password.touched && f.password.errors">
+    <span *ngIf="f.password.errors['required']">Required.</span>
+    <span *ngIf="f.password.errors['minlength']">At least 6 characters.</span>
+  </div>
+</div>
+
+<!-- Confirm Password -->
+<div class="full">
+  <label for="confirmPassword">Confirm Password</label>
+  <div class="input-with-button">
+    <input id="confirmPassword" [type]="showConfirm ? 'text' : 'password'"
+           placeholder="repeat password" formControlName="confirmPassword"
+           [class.invalid]="
+             (f.confirmPassword.touched && f.confirmPassword.invalid) ||
+             (form.hasError('mismatch') && f.confirmPassword.touched)
+           " />
+    <button type="button" class="eye" (click)="togglePass('confirm')" aria-label="Toggle confirm">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path *ngIf="!showConfirm"
+              d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+        <path *ngIf="showConfirm"
+              d="M3 3l18 18-1.41 1.41L15.73 19A10.94 10.94 0 0 1 12 20C7 20 2.73 16.89 1 13c.54-1.22 1.34-2.33 2.34-3.28L1.59 7.97 3 6.56l18 18z"/>
+      </svg>
+    </button>
+  </div>
+  <div class="hint" *ngIf="f.confirmPassword.touched && f.confirmPassword.errors">
+    <span *ngIf="f.confirmPassword.errors['required']">Required.</span>
+  </div>
+  <div class="hint" *ngIf="form.hasError('mismatch') && f.confirmPassword.touched">
+    Passwords do not match.
+  </div>
+</div>
+        <!-- Role -->
+        <div class="full">
+          <label for="role">Role</label>
+          <select id="role" formControlName="role">
+            <option [ngValue]="'CLASS_REP'">Class Representative</option>
+            <option [ngValue]="'UNIVERSITY_REP'">University Rep (SUZASO)</option>
+            <option [ngValue]="'LECTURER'">Lecturer</option>
+            <option [ngValue]="'ADMIN'">Admin</option>
+          </select>
+        </div>
+
+        <!-- Campus: for CLASS_REP & UNIVERSITY_REP -->
+        <div class="half" *ngIf="form.value.role === 'CLASS_REP' || form.value.role === 'UNIVERSITY_REP'">
+          <label for="campus">Campus</label>
+          <select id="campus" formControlName="campus"
+                  [class.invalid]="f.campus.touched && f.campus.invalid">
+            <option value="">-- Select campus --</option>
+            <option *ngFor="let c of campuses" [value]="c">{{ c }}</option>
+          </select>
+          <!-- show 'Required' ONLY when it is actually required -->
+          <div class="hint" *ngIf="f.campus.touched && f.campus.errors?.['required']">Required for this role.</div>
+        </div>
+
+        <!-- Course: CLASS_REP & UNIVERSITY_REP (UNI_REP = optional) -->
+        <div class="half" *ngIf="form.value.role === 'CLASS_REP' || form.value.role === 'UNIVERSITY_REP'">
+          <label for="course">Course</label>
+          <select id="course" formControlName="course"
+                  [class.invalid]="f.course.touched && f.course.invalid">
+            <option value="">-- Select course --</option>
+            <option *ngFor="let c of courses" [value]="c">{{ c }}</option>
+          </select>
+          <div class="hint" *ngIf="f.course.touched && f.course.errors?.['required']">
+            Required for this role.
+          </div>
+        </div>
+
+        <!-- Registration Number: CLASS_REP & UNIVERSITY_REP (UNI_REP = optional) -->
+        <div class="full" *ngIf="form.value.role === 'CLASS_REP' || form.value.role === 'UNIVERSITY_REP'">
+          <label for="registrationNumber">Registration Number</label>
+          <input id="registrationNumber" placeholder="eg. SUZA/2023/12345" formControlName="registrationNumber"
+                 [class.invalid]="f.registrationNumber.touched && f.registrationNumber.invalid" />
+          <div class="hint" *ngIf="f.registrationNumber.touched && f.registrationNumber.errors?.['required']">
+            Required for this role.
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <button class="submit" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Create account</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+    </form>
+
+    <div class="auth-alt">
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </div>
+  </div>
+</div>

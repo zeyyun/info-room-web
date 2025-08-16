@@ -1,0 +1,33 @@
+.admin-page { min-height: 100vh; background: #f5f7fb; display: flex; flex-direction: column; }
+.topbar { padding: 12px 20px; background: #fff; border-bottom: 1px solid #eef0f6; display:flex; align-items:center; justify-content: space-between; }
+.brand { font-weight: 800; }
+
+.content { padding: 20px; flex: 1; }
+
+/* user menu */
+.user { position: relative; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #e5e7eb; background:#fff; font-weight:700; }
+.menu { position: absolute; right: 0; top: 44px; width: 260px; background:#fff; border:1px solid #e5e7eb; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.08); padding: 10px; z-index: 30; }
+.who { padding: 8px 10px 12px; border-bottom: 1px solid #f0f2f7; margin-bottom: 8px; }
+.who .name { font-weight: 700; }
+.who .email { color: #6b7280; font-size: 12px; }
+.menu-item { width:100%; text-align:left; background:#fff; border:0; padding:10px; border-radius:8px; cursor:pointer; }
+.menu-item:hover { background:#f6f7fb; }
+.menu-item.danger { color:#b91c1c; }
+
+/* modal */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 40; }
+.modal { position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 520px; max-width: 95vw; background:#fff;
+  border-radius: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.2); z-index: 50; }
+.modal-header { display:flex; align-items:center; justify-content: space-between; padding: 14px 16px; border-bottom:1px solid #eef0f6; }
+.modal-body { display:flex; flex-direction: column; gap: 10px; padding: 16px; }
+.modal .close { background: transparent; border: 0; font-size: 22px; line-height: 1; cursor: pointer; }
+
+input[type="password"] { width:100%; padding:10px; border:1px solid #e5e7eb; border-radius: 10px; }
+.hint.err { color:#b91c1c; font-size: 12px; }
+.state.ok { color:#065f46; }
+.state.err { color:#b91c1c; }
+.actions { display:flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+.btn { padding: 8px 14px; border-radius: 10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
+.btn.primary { background:#111827; color:#fff; border-color:#111827; }
+.btn[disabled] { opacity:.6; cursor:not-allowed; }

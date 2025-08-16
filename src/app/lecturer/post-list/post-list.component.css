@@ -1,0 +1,21 @@
+.list-top { display: flex; gap: 8px; margin-bottom: 12px; }
+.list-top input[type="search"] { flex: 1; padding: .5rem .75rem; }
+
+.card.post-card { padding: 12px; margin-bottom: 12px; }
+.post-head { display: flex; align-items: center; justify-content: space-between; }
+.chips { display: flex; gap: 6px; }
+
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.chip-all { background: #e6f7ff; color: #086; }
+.chip-classes { background: #fff3cd; color: #7a4; }
+
+.muted { color: #666; }
+.err { color: #b00020; margin: 6px 0; }
+.post-body .img { margin-top: 8px; max-width: 100%; border-radius: 8px; }
+.post-actions { margin-top: 8px; display: flex; justify-content: flex-end; }
+button.danger { background: #dc3545; color: #fff; border: 0; padding: 6px 12px; border-radius: 6px; }

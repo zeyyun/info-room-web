@@ -1,0 +1,67 @@
+<div class="admin-page">
+  <header class="topbar">
+    <div class="brand">INFO ROOM • Lecturer</div>
+
+    <div class="user" (click)="$event.stopPropagation()">
+      <button class="avatar" (click)="toggleMenu($event)">{{ (displayName||'')[0] || 'U' }}</button>
+
+      <div class="menu" *ngIf="menuOpen" (click)="$event.stopPropagation()">
+        <div class="who">
+          <div class="name">{{ displayName }}</div>
+          <div class="email">{{ displayEmail }}</div>
+        </div>
+
+        <!-- Hii ndo item muhimu: INAfungua modal badala ya alert -->
+        <button class="menu-item" (click)="openChangePassword(); $event.stopPropagation()">
+          <span>Change Password</span>
+        </button>
+
+        <button class="menu-item danger" (click)="logout(); $event.stopPropagation()">
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- ===== Modal: Change Password ===== -->
+<div class="modal-backdrop" *ngIf="pwdOpen" (click)="closePwd()"></div>
+
+<div class="modal" *ngIf="pwdOpen" (click)="$event.stopPropagation()">
+  <div class="modal-header">
+    <h3>Change Password</h3>
+    <button class="close" (click)="closePwd()" [disabled]="busy">×</button>
+  </div>
+
+  <form class="modal-body" [formGroup]="pwdForm" (ngSubmit)="submitPwd()">
+    <label>Current password</label>
+    <input type="password" formControlName="currentPassword" [disabled]="busy" />
+    <div class="hint err" *ngIf="pwdForm.get('currentPassword')?.touched && pwdForm.get('currentPassword')?.invalid">
+      Required
+    </div>
+
+    <label>New password</label>
+    <input type="password" formControlName="newPassword" [disabled]="busy" />
+    <div class="hint err" *ngIf="pwdForm.get('newPassword')?.touched && pwdForm.get('newPassword')?.hasError('minlength')">
+      Minimum 8 characters
+    </div>
+
+    <label>Confirm new password</label>
+    <input type="password" formControlName="confirm" [disabled]="busy" />
+    <div class="hint err" *ngIf="pwdForm.get('confirm')?.touched && pwdForm.get('confirm')?.invalid">
+      Required
+    </div>
+
+    <div class="state ok" *ngIf="ok">{{ ok }}</div>
+    <div class="state err" *ngIf="err">{{ err }}</div>
+
+    <div class="actions">
+      <button type="button" class="btn" (click)="closePwd()" [disabled]="busy">Cancel</button>
+      <button type="submit" class="btn primary" [disabled]="busy || pwdForm.invalid">Change</button>
+    </div>
+  </form>
+</div>
